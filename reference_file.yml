@@ -22,6 +22,7 @@ categorical:
     - Electrical
     - GarageType
     - MiscFeature
+    - Fence
     - SaleType
     
 non-categorical:
@@ -44,7 +45,6 @@ non-categorical:
     - GarageCond
     - PavedDrive
     - PoolQC
-    - Fence
     - LotShape
 
 LandSlope:
@@ -136,14 +136,51 @@ Functional:
     Typ:7
 
 FireplaceQu:
+    NA:0
+    Po:1
+    Fa:2
+    TA:3
+    GD:4
+    Ex:5
 GarageFinish:
-GarageQual:
-GarageCond:
-PavedDrive:
-PoolQC:
-Fence:
-LotShape:
+    NA:0
+    Unf:1
+    Rfn:2
+    Fin:3
 
+GarageQual:
+    NA:0
+    Po:1
+    Fa:2
+    TA:3
+    GD:4
+    Ex:5
+
+GarageCond:
+    NA:0
+    Po:1
+    Fa:2
+    TA:3
+    GD:4
+    Ex:5
+
+PavedDrive:
+    N:0
+    P:1
+    Y:2
+
+PoolQC:
+    NA:0
+    Fa:1
+    TA:2
+    GD:3
+    Ex:4
+
+LotShape:
+    IR3:0
+    IR2:1
+    IR1:2
+    Reg:3
 
 
 
