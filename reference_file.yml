@@ -1,0 +1,153 @@
+categorical:
+    - MSSubClass
+    - MSZoning
+    - Street
+    - Alley
+    - LandContour
+    - Utilities
+    - LotConfig
+    - Neighborhood
+    - Condition1
+    - Condition2
+    - BldgType
+    - HouseStyle
+    - RoofStyle	
+    - RoofMatl	
+    - Exterior1st	
+    - Exterior2nd	
+    - MasVnrType
+    - Foundation
+    - Heating
+    - CentralAir
+    - Electrical
+    - GarageType
+    - MiscFeature
+    - SaleType
+    
+non-categorical:
+    - LandSlope
+    - OverallQual
+    - OverallCond
+    - ExterQual	
+    - ExterCond
+    - BsmtQual	
+    - BsmtCond
+    - BsmtExposure	
+    - BsmtFinType1
+    - BsmtFinType2
+    - HeatingQC
+    - KitchenQual
+    - Functional
+    - FireplaceQu
+    - GarageFinish
+    - GarageQual
+    - GarageCond
+    - PavedDrive
+    - PoolQC
+    - Fence
+    - LotShape
+
+LandSlope:
+    Gtl:1
+    Mod:2
+    Sev:3
+    
+#OverallQual:
+
+#OverallCond:
+
+ExterQual:
+    Po:1
+    Fa:2
+    TA:3
+    Gd:4
+    Ex:5
+
+ExterCond:
+    Po:1
+    Fa:2
+    TA:3
+    Gd:4
+    Ex:5
+    
+BsmtQual:
+    NA:0
+    Po:1
+    Fa:2
+    TA:3
+    Gd:4
+    Ex:5
+
+BsmtCond:
+    NA:0
+    Po:1
+    Fa:2
+    TA:3
+    Gd:4
+    Ex:5
+
+BsmtExposure:
+    NA:0
+    No:1
+    Mn:2
+    Av:3
+    Gd:4
+	
+BsmtFinType1:
+    NA:0
+    Unf:1
+    LwQ:2
+    Rec:3
+    BLQ:4
+    ALQ:5
+    GLQ:6
+
+BsmtFinType2:
+    NA:0
+    Unf:1
+    LwQ:2
+    Rec:3
+    BLQ:4
+    ALQ:5
+    GLQ:6
+
+HeatingQC:
+    Po:1
+    Fa:2
+    TA:3
+    Gd:4
+    Ex:5
+
+KitchenQual:
+    Po:1
+    Fa:2
+    TA:3
+    Gd:4
+    Ex:5
+
+Functional:
+    Sal:0
+    Sev:1
+    Maj2:2
+    Maj1:3
+    Mod:4
+    Min2:5
+    Min1:6
+    Typ:7
+
+FireplaceQu:
+GarageFinish:
+GarageQual:
+GarageCond:
+PavedDrive:
+PoolQC:
+Fence:
+LotShape:
+
+
+
+
+    
+
+
+    
