@@ -24,6 +24,7 @@ categorical:
     - MiscFeature
     - Fence
     - SaleType
+    - SaleCondition
     
 non-categorical:
     - LandSlope
