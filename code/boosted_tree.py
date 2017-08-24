@@ -43,10 +43,10 @@ df_train.to_csv('daniel.csv')
 X = df_train[[x for x in df_train.columns if x!='SalePrice']]
 y = df_train['SalePrice']
 forest = RandomForestRegressor()
-feat_selector = boruta_py.BorutaPy(forest, n_estimators=1000, verbose=4)
+feat_selector = boruta_py.BorutaPy(forest, n_estimators=100, verbose=4)
 
 # find all relevant features
-feat_selector.fit(X.as_matrix(), y.as_matrix())
+feat_selector.fit_transform(X.as_matrix(), y.as_matrix())
 
 # check selected features
 features_bool = np.array(feat_selector.support_)
