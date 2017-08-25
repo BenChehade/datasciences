@@ -120,6 +120,7 @@ HeatingQC:
     Ex: 5
 
 KitchenQual:
+    NA: 0
     Po: 1
     Fa: 2
     TA: 3
@@ -127,14 +128,15 @@ KitchenQual:
     Ex: 5
 
 Functional:
-    Sal: 0
-    Sev: 1
-    Maj2: 2
-    Maj1: 3
-    Mod: 4
-    Min2: 5
-    Min1: 6
-    Typ: 7
+    NA: 0
+    Sal: 1
+    Sev: 2
+    Maj2: 3
+    Maj1: 4
+    Mod: 5
+    Min2: 6
+    Min1: 7
+    Typ: 8
 
 FireplaceQu:
     NA: 0
