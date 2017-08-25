@@ -10,6 +10,7 @@ from cat_variables import load_yml
 from cat_variables import cat_var_transform
 from sklearn.ensemble import RandomForestRegressor
 from boruta import boruta_py
+from sklearn.preprocessing import StandardScaler
 from missing_data import missing_list
 from sklearn.feature_selection import SelectFromModel
 import sys
@@ -18,6 +19,7 @@ def generate_train(columns_to_drop = ['MasVnrArea', 'GarageYrBlt', 'LotFrontage'
     # combine training and test data
     df = pd.read_csv('train.csv', keep_default_na=False, na_values=[''], index_col=0)
     df.drop(columns_to_drop, axis=1, inplace=True)
+    df = df[df['GrLivArea']<4000]
     df['source'] = 'train'
     return df
 
@@ -49,7 +51,7 @@ def additional_feature(df):
     #data about ames obtained fromhttps://fred.stlouisfed.org/series/ATNHPIUS11180Q
     #averagePrice = {2006:243066.6667,2007:243741.6667,2008:230408.3333,2009:214500,2010:221241.6667}
     #df['av_price'] = df['YrSold'].map(lambda x: averagePrice[int(x)])
-    df['Bungalow'] = df['2ndFlrSF'].map(lambda x: 1*(int(x)==0))
+    df['Bungalow'] = df['2ndFlrSF'].map(lambda x: 1*(int(x) == 0))
     df.to_csv('output3.csv')
     return df
 
@@ -103,6 +105,11 @@ def greedy_elim(df):
     #print(rank)
 
     return result
+
+def pca_transform(df):
+    scaler = StandardScaler
+    scaler.fit(df)
+    scaled_data = scaler.transform(df)
 
 def rmsle(predicted,real):
     sum=0.0
