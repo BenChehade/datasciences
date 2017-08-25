@@ -1,64 +1,74 @@
 import pandas as pd
 import numpy as np
-import sys
-import os
-#from sklearn.model_selection import train_test_split, cross_val_predict,  cross_val_score
-#from sklearn.ensemble import gradient_boosting
-#from sklearn.decomposition import PCA
-from cat_variables import load_yml
-from cat_variables import cat_var_transform
+from prepare_data import data_manip, generate_train, generate_test, data_merge, fs_boruta, greedy_elim, additional_feature, rmsle
 from sklearn.ensemble import RandomForestRegressor
-from boruta import boruta_py
-from missing_data import missing_list
-from sklearn.feature_selection import SelectFromModel
+from sklearn.cross_validation import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.decomposition import PCA
 import sys
 
-#df_train = pd.read_csv('train.csv')
-#df_train.drop('SalePrice', axis=1, inplace=True)
-columns_to_drop = ['MasVnrArea', 'GarageYrBlt', 'LotFrontage']
-#pca = PCA(n_components=30)
-#pca.fit(df_train)
-
-# combine training and test data
-df_train = pd.read_csv('train.csv', keep_default_na=False, na_values=[''], index_col=0)
-df_train.drop(columns_to_drop, axis=1, inplace=True)
-df_train['source'] = 'train'
-df_test = pd.read_csv   ('test.csv', keep_default_na=False, na_values=[''], index_col=0)
-df_test.drop(columns_to_drop, axis=1, inplace=True)
-df_test['source'] = 'test'
+# generate test and training data and merge them together for manipulation (dummies and hierachical)
+df_train = generate_train()
+df_test = generate_test()
 df_merge = pd.concat([df_train, df_test])
+df_merge = additional_feature(df_merge)
 
-#apply changes to variables and create the train and test data
-cat_dict = load_yml()
-df_merge = cat_var_transform(df_train, cat_dict)
-df_merge_dummy = pd.get_dummies(df_merge, columns=cat_dict['categorical'])
-df_merge_dummy.replace('NA', np.nan, inplace=True)
-df_train = df_merge_dummy[df_merge_dummy['source']=='train'].copy(deep=True)
+# create dummies and hierachical changes and split data into train and test
+df_merge_transform = data_manip(df_merge)
+df_train = df_merge_transform[df_merge_transform['source'] == 'train'].copy(deep=True)
 df_train.drop('source', axis=1, inplace=True)
-df_test = df_merge_dummy[df_merge_dummy['source']=='test'].copy(deep=True)
+df_train= df_train.apply(pd.to_numeric)
+df_test = df_merge_transform[df_merge_transform['source'] == 'test'].copy(deep=True)
 df_test.drop('source', axis=1, inplace=True)
-df_train.to_csv('daniel.csv')
+df_test= df_test.apply(pd.to_numeric)
 
-# do feature selection using boruta
-X = df_train[[x for x in df_train.columns if x!='SalePrice']]
+# perform boruta feature selection
+bool_fs_selection = True
+if bool_fs_selection:
+    key_features = greedy_elim(df_train)
+    key_features = [i for i in key_features]
+    print(key_features)
+else:
+    key_features = [i for i in df_test.columns]
+    #key_features = ['1stFlrSF', '2ndFlrSF', 'BsmtFinSF1', 'BsmtQual', 'GarageArea', 'GarageCars',
+ #'GrLivArea', 'LotArea', 'OverallQual', 'TotRmsAbvGrd', 'TotalBsmtSF',
+ #'YearBuilt', 'YearRemodAdd']
+
+# train and output test data
+bool_split_data = False
+df_train = df_train[key_features + ['SalePrice']]
+df_test = df_test[key_features]
+X = df_train.drop('SalePrice', axis=1)
 y = df_train['SalePrice']
 forest = RandomForestRegressor()
-feat_selector = boruta_py.BorutaPy(forest, n_estimators=100, verbose=4)
+if bool_split_data:
+    X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.3, random_state=42)
+    forest.fit(X_train,y_train)
+    predictions = forest.predict(X_test)
+    predictions = np.array(predictions)
+    y_test = np.array(y_test)
+    print(rmsle(predictions, y_test))
 
-# find all relevant features
-feat_selector.fit_transform(X.as_matrix(), y.as_matrix())
+else:
+    forest.fit(X,y)
+    df_test.fillna(0, inplace=True)
+    predictions = pd.DataFrame(forest.predict(df_test), index=[i for i in range(1461,2920)])
+    predictions.columns = ['SalePrice']
+    predictions.index.name = 'Id'
+    predictions.to_csv('output.csv')
 
-# check selected features
-features_bool = np.array(feat_selector.support_)
-features = np.array(X.columns)
-result = features[features_bool]
-print(result)
 
-# check ranking of features
-features_rank = feat_selector.ranking_
-print(features_rank)
-rank = features_rank[features_bool]
-print(rank)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
