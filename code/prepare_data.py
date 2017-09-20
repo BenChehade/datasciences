@@ -8,14 +8,20 @@ import os
 #from sklearn.decomposition import PCA
 from cat_variables import load_yml
 from cat_variables import cat_var_transform
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from boruta import boruta_py
 from sklearn.preprocessing import StandardScaler
 from missing_data import missing_list
 from sklearn.feature_selection import SelectFromModel
 import sys
 
-def generate_train(columns_to_drop = ['MasVnrArea', 'GarageYrBlt', 'LotFrontage']):
+def generate_train(columns_to_drop = ['MasVnrArea', 'GarageYrBlt', 'LotFrontage',]):
+                                      #'LotShape', 'LandContour', 'LandSlope',
+                                      #'Electrical', 'GarageType', 'GarageYrBlt', 'GarageFinish',
+                                      #'GarageCars', 'GarageQual', 'PoolQC', 'Fence']):
+
+
+
     # combine training and test data
     df = pd.read_csv('train.csv', keep_default_na=False, na_values=[''], index_col=0)
     df.drop(columns_to_drop, axis=1, inplace=True)
@@ -60,8 +66,8 @@ def fs_boruta(df):
     # do feature selection using boruta
     X = df[[x for x in df.columns if x!='SalePrice']]
     y = df['SalePrice']
-    forest = RandomForestRegressor()
-    feat_selector = boruta_py.BorutaPy(forest, n_estimators=100, verbose=12)
+    model = GradientBoostingRegressor()
+    feat_selector = boruta_py.BorutaPy(model, n_estimators=100, verbose=12)
 
     # find all relevant features
     feat_selector.fit_transform(X.as_matrix(), y.as_matrix())
@@ -85,9 +91,10 @@ def greedy_elim(df):
     # do feature selection using boruta
     X = df[[x for x in df.columns if x!='SalePrice']]
     y = df['SalePrice']
-    forest = RandomForestRegressor()
+    #model = RandomForestRegressor(n_estimators=50)
+    model = GradientBoostingRegressor(n_estimators=50, learning_rate=0.05)
     # 150 features seems to be the best at the moment. Why this is is unclear.
-    feat_selector = RFE(estimator=forest, step=1, n_features_to_select=150)
+    feat_selector = RFE(estimator=model, step=1, n_features_to_select=150)
 
     # find all relevant features
     feat_selector.fit_transform(X.as_matrix(), y.as_matrix())
